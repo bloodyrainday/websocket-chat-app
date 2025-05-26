@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [messages, setMessages] = useState([
+    {
+      message: "hello miki",
+      id: "ewknedjndqejn",
+      user: { id: "dekdnekdne", name: "mikita" },
+    },
+    {
+      message: "hello mikita",
+      id: "dweefwefwwef",
+      user: { id: "dwefwewdedwe", name: "miki" },
+    },
+  ]);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div
+        style={{
+          border: "1px solid black",
+          padding: "10px",
+          height: "300px",
+          width: "300px",
+          overflowY: "scroll",
+        }}
+      >
+        {messages.map((m) => {
+          return (
+            <div>
+              <b>{m.user.name}: </b> {m.message}
+              <hr />
+            </div>
+          );
+        })}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <textarea name="" id=""></textarea>
+      <button>send</button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
