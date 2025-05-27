@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import io from "socket.io-client";
+
+//const socket = io("http://localhost:3009");
 
 function App() {
   const [messages, setMessages] = useState([
@@ -17,6 +20,8 @@ function App() {
     },
   ]);
 
+  useEffect(() => {}, []);
+
   return (
     <>
       <div
@@ -28,9 +33,9 @@ function App() {
           overflowY: "scroll",
         }}
       >
-        {messages.map((m) => {
+        {messages.map((m, index) => {
           return (
-            <div>
+            <div key={index}>
               <b>{m.user.name}: </b> {m.message}
               <hr />
             </div>
