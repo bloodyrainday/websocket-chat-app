@@ -4,22 +4,17 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import io from "socket.io-client";
 
+const socket = io("http://localhost:3009/");
+
 function App() {
-  const [messages, setMessages] = useState([
-    {
-      message: "hello miki",
-      id: "ewknedjndqejn",
-      user: { id: "dekdnekdne", name: "mikita" },
-    },
-    {
-      message: "hello mikita",
-      id: "dweefwefwwef",
-      user: { id: "dwefwewdedwe", name: "miki" },
-    },
-  ]);
+  const [messages, setMessages] = useState<Array<any>>([]);
+
+  const [message, setMessage] = useState("hello");
 
   useEffect(() => {
-    const socket = io("http://localhost:3009/");
+    socket.on("init-messages-published", (messages) => {
+      setMessages(messages);
+    });
   }, []);
 
   return (
@@ -33,17 +28,29 @@ function App() {
           overflowY: "scroll",
         }}
       >
-        {messages.map((m, index) => {
+        {messages.map((m) => {
           return (
-            <div key={index}>
+            <div key={m.id}>
               <b>{m.user.name}: </b> {m.message}
               <hr />
             </div>
           );
         })}
       </div>
-      <textarea name="" id=""></textarea>
-      <button>send</button>
+      <textarea
+        name=""
+        id=""
+        value={message}
+        onChange={(e) => setMessage(e.currentTarget.value)}
+      ></textarea>
+      <button
+        onClick={() => {
+          socket.emit("client-message-sent", message);
+          setMessage("");
+        }}
+      >
+        send
+      </button>
     </>
   );
 }
