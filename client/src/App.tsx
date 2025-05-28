@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import io from "socket.io-client";
 
@@ -12,6 +10,9 @@ function App() {
   const [message, setMessage] = useState("hello");
 
   const [name, setName] = useState("mikita");
+  const [isAutoScrollActive, setIsAutoScrollActive] = useState(true);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  console.log(messages);
 
   useEffect(() => {
     socket.on("init-messages-published", (messages) => {
@@ -24,7 +25,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    messagesAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (isAutoScrollActive) {
+      messagesAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
   const messagesAnchorRef = useRef<HTMLDivElement>(null);
@@ -38,6 +41,14 @@ function App() {
           height: "300px",
           width: "300px",
           overflowY: "scroll",
+        }}
+        onScroll={(e) => {
+          if (e.currentTarget.scrollTop > lastScrollTop) {
+            setIsAutoScrollActive(true);
+          } else {
+            setIsAutoScrollActive(false);
+          }
+          setLastScrollTop(e.currentTarget.scrollTop);
         }}
       >
         {messages.map((m) => {
