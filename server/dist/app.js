@@ -1,17 +1,25 @@
 "use strict";
 const express = require("express");
-const app = express();
 const http = require("http");
-const server = http.createServer(app);
 const { Server } = require("socket.io");
-const socket = new Server(server);
-app.get("/", (req, res) => {
+const cors = require("cors");
+const app = express();
+app.use(cors());
+const server = http.createServer(app);
+const socket = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+    },
+});
+app.get("/", (_req, res) => {
     res.send("hi from server");
 });
-socket.on("connection", (connection) => {
+socket.on("connection", (_connection) => {
     console.log("a user connected");
 });
-server.listen(3009, () => {
+const PORT = process.env.PORT || 3009;
+server.listen(PORT, () => {
     console.log("listening on *:3009");
 });
 // import express from "express";

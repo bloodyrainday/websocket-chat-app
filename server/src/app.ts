@@ -1,10 +1,17 @@
-import express from "express";
-import http from "http";
-import { Server } from "socket.io";
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
-const socket = new Server(server);
+const socket = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 
 app.get("/", (_req: any, res: any) => {
   res.send("hi from server");
