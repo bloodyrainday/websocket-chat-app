@@ -15,6 +15,10 @@ function App() {
     socket.on("init-messages-published", (messages) => {
       setMessages(messages);
     });
+
+    socket.on("new-message-sent", (message) => {
+      setMessages((messages) => [...messages, message]);
+    });
   }, []);
 
   return (

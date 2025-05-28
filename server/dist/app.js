@@ -29,7 +29,13 @@ const messages = [
 ];
 socket.on("connection", (socketChannel) => {
     socketChannel.on("client-message-sent", (message) => {
-        console.log(message);
+        const messageItem = {
+            message: message,
+            id: "ewknedjndqejn" + new Date().getTime(),
+            user: { id: "dekdnekdne", name: "mikita" },
+        };
+        messages.push(messageItem);
+        socket.emit("new-message-sent", messageItem);
     });
     socketChannel.emit("init-messages-published", messages);
     console.log("a user connected");

@@ -32,7 +32,14 @@ const messages = [
 
 socket.on("connection", (socketChannel: any) => {
   socketChannel.on("client-message-sent", (message: string) => {
-    console.log(message);
+    const messageItem = {
+      message: message,
+      id: "ewknedjndqejn" + new Date().getTime(),
+      user: { id: "dekdnekdne", name: "mikita" },
+    };
+    messages.push(messageItem);
+
+    socket.emit("new-message-sent", messageItem);
   });
 
   socketChannel.emit("init-messages-published", messages);
