@@ -44,13 +44,13 @@ socket.on("connection", (socketChannel) => {
         const messageItem = {
             message,
             id: new Date().getTime().toString(),
-            user,
+            user: { id: user.id, name: user.name },
         };
         messages.push(messageItem);
         socket.emit("new-message-sent", messageItem);
     });
     socketChannel.emit("init-messages-published", messages);
-    socket.on("client-name-sent", (name) => {
+    socketChannel.on("client-name-sent", (name) => {
         const user = usersState.get(socketChannel);
         user.name = name;
     });

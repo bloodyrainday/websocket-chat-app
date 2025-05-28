@@ -52,7 +52,7 @@ socket.on("connection", (socketChannel: any) => {
     const messageItem = {
       message,
       id: new Date().getTime().toString(),
-      user,
+      user: { id: user.id, name: user.name },
     };
     messages.push(messageItem);
 
@@ -61,7 +61,7 @@ socket.on("connection", (socketChannel: any) => {
 
   socketChannel.emit("init-messages-published", messages);
 
-  socket.on("client-name-sent", (name: string) => {
+  socketChannel.on("client-name-sent", (name: string) => {
     const user = usersState.get(socketChannel);
     user.name = name;
   });
