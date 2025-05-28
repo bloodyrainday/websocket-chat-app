@@ -17,7 +17,7 @@ app.get("/", (_req: any, res: any) => {
   res.send("hi from server");
 });
 
-const users = new Map();
+const usersState = new Map();
 
 const messages = [
   {
@@ -33,19 +33,26 @@ const messages = [
 ];
 
 socket.on("connection", (socketChannel: any) => {
-  users.set(socketChannel, {
+  usersState.set(socketChannel, {
     id: new Date().getTime().toString(),
     name: "anonym",
+  });
+
+  socket.on("disconnect", () => {
+    usersState.delete(socketChannel);
   });
 
   socketChannel.on("client-message-sent", (message: string) => {
     if (typeof message !== "string") {
       return;
     }
+
+    const user = usersState.get(socketChannel);
+
     const messageItem = {
-      message: message,
-      id: "ewknedjndqejn" + new Date().getTime(),
-      user: { id: "dekdnekdne", name: "mikita" },
+      message,
+      id: new Date().getTime().toString(),
+      user,
     };
     messages.push(messageItem);
 
@@ -55,7 +62,7 @@ socket.on("connection", (socketChannel: any) => {
   socketChannel.emit("init-messages-published", messages);
 
   socket.on("client-name-sent", (name: string) => {
-    const user = users.get(socketChannel);
+    const user = usersState.get(socketChannel);
     user.name = name;
   });
 
