@@ -11,6 +11,8 @@ function App() {
 
   const [message, setMessage] = useState("hello");
 
+  const [name, setName] = useState("mikita");
+
   useEffect(() => {
     socket.on("init-messages-published", (messages) => {
       setMessages(messages);
@@ -41,9 +43,19 @@ function App() {
           );
         })}
       </div>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.currentTarget.value)}
+      />
+      <button
+        onClick={() => {
+          socket.emit("client-name-sent", name);
+        }}
+      >
+        submit name
+      </button>
       <textarea
-        name=""
-        id=""
         value={message}
         onChange={(e) => setMessage(e.currentTarget.value)}
       ></textarea>

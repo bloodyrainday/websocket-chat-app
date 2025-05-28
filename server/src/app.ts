@@ -17,6 +17,8 @@ app.get("/", (_req: any, res: any) => {
   res.send("hi from server");
 });
 
+const users = new Map();
+
 const messages = [
   {
     message: "hello miki",
@@ -31,7 +33,15 @@ const messages = [
 ];
 
 socket.on("connection", (socketChannel: any) => {
+  users.set(socketChannel, {
+    id: new Date().getTime().toString(),
+    name: "anonym",
+  });
+
   socketChannel.on("client-message-sent", (message: string) => {
+    if (typeof message !== "string") {
+      return;
+    }
     const messageItem = {
       message: message,
       id: "ewknedjndqejn" + new Date().getTime(),
@@ -43,6 +53,11 @@ socket.on("connection", (socketChannel: any) => {
   });
 
   socketChannel.emit("init-messages-published", messages);
+
+  socket.on("client-name-sent", (name: string) => {
+    const user = users.get(socketChannel);
+    user.name = name;
+  });
 
   console.log("a user connected");
 });
